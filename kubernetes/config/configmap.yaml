@@ -1,0 +1,66 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: llm-judge-config
+  namespace: llm-judge
+  labels:
+    app.kubernetes.io/name: llm-judge
+    app.kubernetes.io/component: config
+data:
+  # Application settings
+  environment: "production"
+  log-level: "INFO"
+  log-format: "json"
+
+  # API settings
+  api-host: "0.0.0.0"
+  api-port: "8000"
+  cors-origins: "https://judge.example.com"
+
+  # Judge model settings
+  judge-api-url: "http://llm-judge-vllm:8000/v1"
+  judge-model-name: "Qwen/Qwen2.5-72B-Instruct-GPTQ-Int4"
+  judge-temperature: "0.1"
+  judge-max-tokens: "4096"
+  judge-timeout: "120"
+
+  # LanguageTool settings
+  languagetool-url: "http://llm-judge-languagetool:8010/v2"
+  languagetool-enabled: "true"
+
+  # Batch processing settings
+  batch-size-default: "100"
+  batch-size-max: "1000"
+  batch-concurrency: "5"
+
+  # GDPR settings
+  data-retention-days: "365"
+  pii-redaction-enabled: "true"
+  audit-log-enabled: "true"
+
+  # Cache settings
+  redis-cache-ttl: "3600"
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: llm-judge-secrets
+  namespace: llm-judge
+  labels:
+    app.kubernetes.io/name: llm-judge
+    app.kubernetes.io/component: secrets
+type: Opaque
+stringData:
+  # Database connection
+  database-url: "postgresql+asyncpg://llmjudge:CHANGE_ME@llm-judge-postgres:5432/llmjudge"
+
+  # Redis connection
+  redis-url: "redis://:CHANGE_ME@llm-judge-redis:6379/0"
+  celery-broker-url: "redis://:CHANGE_ME@llm-judge-redis:6379/1"
+  celery-result-backend: "redis://:CHANGE_ME@llm-judge-redis:6379/2"
+
+  # Application secrets
+  secret-key: "CHANGE_ME_TO_RANDOM_64_CHAR_STRING"
+
+  # Judge API key (if using external provider)
+  judge-api-key: "not-needed"

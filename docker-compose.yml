@@ -1,0 +1,195 @@
+version: "3.9"
+
+# LLM-as-Judge Evaluation Framework
+# Docker Compose configuration for local development and testing
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: llm-judge-postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-llmjudge}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
+      POSTGRES_DB: ${POSTGRES_DB:-llmjudge}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U llmjudge"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - llm-judge-network
+
+  # Redis for Celery and Caching
+  redis:
+    image: redis:7-alpine
+    container_name: llm-judge-redis
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - llm-judge-network
+
+  # LanguageTool for German grammar checking
+  languagetool:
+    image: erikvl87/languagetool:latest
+    container_name: llm-judge-languagetool
+    ports:
+      - "8081:8010"
+    environment:
+      - Java_Xms=512m
+      - Java_Xmx=2g
+    networks:
+      - llm-judge-network
+
+  # FastAPI Backend
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: llm-judge-backend
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://llmjudge:llmjudge@postgres:5432/llmjudge
+      - REDIS_URL=redis://redis:6379/0
+      - CELERY_BROKER_URL=redis://redis:6379/1
+      - CELERY_RESULT_BACKEND=redis://redis:6379/2
+      - LANGUAGE_TOOL_URL=http://languagetool:8010/v2
+      - JUDGE_API_URL=${JUDGE_API_URL:-http://vllm:8000/v1}
+      - JUDGE_MODEL_NAME=${JUDGE_MODEL_NAME:-Qwen/Qwen2.5-72B-Instruct-GPTQ-Int4}
+      - JUDGE_MODEL_PROVIDER=${JUDGE_MODEL_PROVIDER:-openai_compatible}
+      - JUDGE_API_KEY=${JUDGE_API_KEY:-not-needed}
+      - DEBUG=true
+      - LOG_LEVEL=DEBUG
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app/backend
+      - ./judge:/app/judge
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - llm-judge-network
+
+  # Celery Worker
+  celery-worker:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: llm-judge-celery-worker
+    command: celery -A backend.app.workers.celery_app worker --loglevel=info --concurrency=4
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://llmjudge:llmjudge@postgres:5432/llmjudge
+      - REDIS_URL=redis://redis:6379/0
+      - CELERY_BROKER_URL=redis://redis:6379/1
+      - CELERY_RESULT_BACKEND=redis://redis:6379/2
+      - JUDGE_API_URL=${JUDGE_API_URL:-http://vllm:8000/v1}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ./backend:/app/backend
+      - ./judge:/app/judge
+    depends_on:
+      - backend
+      - redis
+    networks:
+      - llm-judge-network
+
+  # Celery Beat Scheduler
+  celery-beat:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: llm-judge-celery-beat
+    command: celery -A backend.app.workers.celery_app beat --loglevel=info
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://llmjudge:llmjudge@postgres:5432/llmjudge
+      - REDIS_URL=redis://redis:6379/0
+      - CELERY_BROKER_URL=redis://redis:6379/1
+      - CELERY_RESULT_BACKEND=redis://redis:6379/2
+    volumes:
+      - ./backend:/app/backend
+    depends_on:
+      - backend
+      - redis
+    networks:
+      - llm-judge-network
+
+
+  # vLLM Server for Judge Model (GPU required)
+  # Comment out if using external LLM API
+  vllm:
+    image: vllm/vllm-openai:latest
+    container_name: llm-judge-vllm
+    runtime: nvidia
+    environment:
+      - HUGGING_FACE_HUB_TOKEN=${HF_TOKEN}
+    command: >
+      --model Qwen/Qwen2.5-72B-Instruct-GPTQ-Int4
+      --tensor-parallel-size 1
+      --gpu-memory-utilization 0.9
+      --max-model-len 8192
+      --dtype auto
+    ports:
+      - "8080:8000"
+    volumes:
+      - huggingface_cache:/root/.cache/huggingface
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    networks:
+      - llm-judge-network
+    profiles:
+      - gpu
+
+  # Flower for Celery monitoring (optional)
+  flower:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: llm-judge-flower
+    command: celery -A backend.app.workers.celery_app flower --port=5555
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/1
+    ports:
+      - "5555:5555"
+    depends_on:
+      - celery-worker
+    networks:
+      - llm-judge-network
+    profiles:
+      - monitoring
+
+volumes:
+  postgres_data:
+  redis_data:
+  huggingface_cache:
+
+networks:
+  llm-judge-network:
+    driver: bridge

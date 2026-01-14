@@ -1,0 +1,297 @@
+{
+  "metadata": {
+    "version": "1.0.0",
+    "description": "Sample German e-commerce customer support conversations for testing",
+    "categories": ["retoure", "beschwerde", "produktanfrage", "lieferung", "zahlung"],
+    "created_at": "2024-01-15"
+  },
+  "conversations": [
+    {
+      "id": "CONV-001",
+      "category": "retoure",
+      "expected_score_range": [8.5, 10.0],
+      "messages": [
+        {
+          "role": "customer",
+          "content": "Hallo, ich möchte meine Bestellung zurückschicken. Die Schuhe passen nicht."
+        },
+        {
+          "role": "chatbot",
+          "content": "Guten Tag! Es tut mir leid zu hören, dass die Schuhe nicht passen. Ich helfe Ihnen gerne bei der Retoure.\n\nSie haben gemäß Ihres gesetzlichen Widerrufsrechts 14 Tage Zeit, die Ware ohne Angabe von Gründen zurückzusenden. Da Ihre Bestellung erst vor 5 Tagen eingegangen ist, können Sie problemlos retournieren.\n\nSo funktioniert die Rücksendung:\n1. Loggen Sie sich in Ihr Kundenkonto ein\n2. Gehen Sie zu \"Meine Bestellungen\"\n3. Klicken Sie auf \"Retoure anmelden\"\n4. Drucken Sie das kostenlose Retourenlabel aus\n5. Verpacken Sie die Schuhe im Originalkarton\n6. Geben Sie das Paket bei einem DHL-Paketshop ab\n\nDie Rückerstattung erfolgt innerhalb von 5-7 Werktagen nach Wareneingang auf Ihr ursprüngliches Zahlungsmittel.\n\nKann ich Ihnen noch mit etwas anderem helfen?"
+        },
+        {
+          "role": "customer",
+          "content": "Danke, das war sehr hilfreich!"
+        },
+        {
+          "role": "chatbot",
+          "content": "Sehr gerne! Ich wünsche Ihnen noch einen schönen Tag. Bei weiteren Fragen sind wir jederzeit für Sie da."
+        }
+      ],
+      "expected_dimensions": {
+        "accuracy": 10,
+        "tone": 9,
+        "compliance": 10,
+        "completeness": 10,
+        "language_quality": 10,
+        "efficiency": 9
+      }
+    },
+    {
+      "id": "CONV-002",
+      "category": "beschwerde",
+      "expected_score_range": [3.0, 5.0],
+      "messages": [
+        {
+          "role": "customer",
+          "content": "Das ist eine Frechheit! Mein Paket ist seit 2 Wochen überfällig und niemand kann mir sagen wo es ist!"
+        },
+        {
+          "role": "chatbot",
+          "content": "Ich verstehe. Bitte geben Sie mir Ihre Bestellnummer."
+        },
+        {
+          "role": "customer",
+          "content": "12345678 - Ich habe schon dreimal angerufen!"
+        },
+        {
+          "role": "chatbot",
+          "content": "Die Sendung ist unterwegs. Bitte warten Sie noch."
+        },
+        {
+          "role": "customer",
+          "content": "Das ist absolut inakzeptabel!"
+        },
+        {
+          "role": "chatbot",
+          "content": "Wir können nichts machen. Die Lieferung liegt beim Versanddienstleister."
+        }
+      ],
+      "expected_dimensions": {
+        "accuracy": 5,
+        "tone": 2,
+        "compliance": 6,
+        "completeness": 3,
+        "language_quality": 7,
+        "efficiency": 4
+      }
+    },
+    {
+      "id": "CONV-003",
+      "category": "produktanfrage",
+      "expected_score_range": [7.0, 8.5],
+      "messages": [
+        {
+          "role": "customer",
+          "content": "Ist der Samsung TV 55 Zoll auch für Gaming geeignet?"
+        },
+        {
+          "role": "chatbot",
+          "content": "Ja, der Samsung 55\" Smart TV ist sehr gut für Gaming geeignet. Er bietet:\n\n- 120Hz Bildwiederholrate für flüssiges Gameplay\n- HDMI 2.1 Anschlüsse für PS5 und Xbox Series X\n- Niedrige Input Lag von nur 9.8ms im Game Mode\n- Variable Refresh Rate (VRR) Unterstützung\n\nFür kompetitives Gaming wie Shooter würde ich allerdings einen Gaming-Monitor mit noch niedrigerem Input Lag empfehlen. Für Couch-Gaming und Einzelspieler-Titel ist dieser TV jedoch hervorragend.\n\nHaben Sie noch weitere Fragen zum Produkt?"
+        },
+        {
+          "role": "customer",
+          "content": "Perfekt, danke! Wie lange ist die Garantie?"
+        },
+        {
+          "role": "chatbot",
+          "content": "Die gesetzliche Gewährleistung beträgt 2 Jahre ab Kaufdatum. Samsung bietet zusätzlich eine Herstellergarantie von 2 Jahren, die Sie auf der Samsung-Website registrieren können."
+        }
+      ],
+      "expected_dimensions": {
+        "accuracy": 8,
+        "tone": 8,
+        "compliance": 9,
+        "completeness": 8,
+        "language_quality": 9,
+        "efficiency": 8
+      }
+    },
+    {
+      "id": "CONV-004",
+      "category": "lieferung",
+      "expected_score_range": [6.0, 7.5],
+      "messages": [
+        {
+          "role": "customer",
+          "content": "Wo ist mein Paket? Tracking sagt 'in Zustellung' seit gestern."
+        },
+        {
+          "role": "chatbot",
+          "content": "Ich verstehe Ihre Besorgnis. Der Status 'in Zustellung' bedeutet, dass das Paket bereits im lokalen Verteilzentrum ist und heute zugestellt werden sollte.\n\nManchmal kann es zu Verzögerungen kommen durch:\n- Hohes Paketaufkommen\n- Verkehrsbedingte Verzögerungen\n- Zustellversuch bei Abwesenheit\n\nWenn das Paket heute nicht ankommt, kontaktieren Sie uns bitte erneut und wir eröffnen eine Nachforschung beim Versanddienstleister.\n\nMöchten Sie eine Benachrichtigung erhalten, wenn sich der Status ändert?"
+        }
+      ],
+      "expected_dimensions": {
+        "accuracy": 7,
+        "tone": 8,
+        "compliance": 7,
+        "completeness": 7,
+        "language_quality": 8,
+        "efficiency": 6
+      }
+    },
+    {
+      "id": "CONV-005",
+      "category": "zahlung",
+      "expected_score_range": [0.0, 3.0],
+      "messages": [
+        {
+          "role": "customer",
+          "content": "Mir wurde zweimal der gleiche Betrag abgebucht! Das sind 249€!"
+        },
+        {
+          "role": "chatbot",
+          "content": "Das kann passieren. Bitte warten Sie 3-5 Werktage."
+        },
+        {
+          "role": "customer",
+          "content": "Was?! Das ist mein Geld! Ich brauche das sofort zurück!"
+        },
+        {
+          "role": "chatbot",
+          "content": "Wir können das nicht beschleunigen. Die Bank regelt das automatisch."
+        },
+        {
+          "role": "customer",
+          "content": "Das ist doch Ihr Fehler!"
+        },
+        {
+          "role": "chatbot",
+          "content": "Nein, das ist ein technischer Fehler. Nicht unser Problem."
+        }
+      ],
+      "expected_dimensions": {
+        "accuracy": 3,
+        "tone": 1,
+        "compliance": 2,
+        "completeness": 2,
+        "language_quality": 6,
+        "efficiency": 5
+      }
+    },
+    {
+      "id": "CONV-006",
+      "category": "retoure",
+      "expected_score_range": [5.5, 7.0],
+      "messages": [
+        {
+          "role": "customer",
+          "content": "Kann ich eine Jacke nach 20 Tagen noch zurückgeben?"
+        },
+        {
+          "role": "chatbot",
+          "content": "Die gesetzliche Widerrufsfrist von 14 Tagen ist leider bereits abgelaufen. Eine Rückgabe ist nur noch bei Mängeln möglich.\n\nHat die Jacke einen Mangel oder ist sie beschädigt? Dann können wir einen Gewährleistungsfall prüfen."
+        },
+        {
+          "role": "customer",
+          "content": "Nein, sie gefällt mir einfach nicht."
+        },
+        {
+          "role": "chatbot",
+          "content": "In diesem Fall kann ich Ihnen leider keine Rücknahme anbieten. Sie könnten die Jacke jedoch über unseren Secondhand-Marktplatz verkaufen.\n\nAlternativ bieten wir bei zukünftigen Bestellungen unsere Premium-Mitgliedschaft an, die ein 30-tägiges Rückgaberecht beinhaltet."
+        }
+      ],
+      "expected_dimensions": {
+        "accuracy": 9,
+        "tone": 6,
+        "compliance": 8,
+        "completeness": 6,
+        "language_quality": 8,
+        "efficiency": 7
+      }
+    },
+    {
+      "id": "CONV-007",
+      "category": "konto",
+      "expected_score_range": [8.0, 9.5],
+      "messages": [
+        {
+          "role": "customer",
+          "content": "Ich habe mein Passwort vergessen und die E-Mail-Adresse ist auch nicht mehr aktuell."
+        },
+        {
+          "role": "chatbot",
+          "content": "Das ist natürlich ärgerlich, aber wir können das lösen. Für die Verifizierung Ihrer Identität benötige ich folgende Informationen:\n\n1. Ihren vollständigen Namen\n2. Die bei uns hinterlegte Rechnungsadresse\n3. Die letzten 4 Ziffern der verwendeten Zahlungsmethode\n4. Eine aktuelle E-Mail-Adresse für die Zurücksetzung\n\nBitte beachten Sie, dass wir aus Datenschutzgründen keine sensiblen Informationen im Chat anzeigen. Die neue E-Mail wird nach der Verifizierung sicher hinterlegt.\n\nMöchten Sie fortfahren?"
+        },
+        {
+          "role": "customer",
+          "content": "Ja, Name ist Max Mustermann, Adresse ist Musterstraße 123, 12345 Berlin."
+        },
+        {
+          "role": "chatbot",
+          "content": "Vielen Dank. Um den Prozess sicher abzuschließen, sende ich Ihnen nun ein Bestätigungsformular per Post an die genannte Adresse. Dieses enthält einen Code, mit dem Sie Ihre neue E-Mail-Adresse verifizieren können.\n\nAlternativ können Sie sich auch in einer unserer Filialen mit Ihrem Personalausweis legitimieren - das geht schneller.\n\nWelche Option bevorzugen Sie?"
+        }
+      ],
+      "expected_dimensions": {
+        "accuracy": 8,
+        "tone": 9,
+        "compliance": 10,
+        "completeness": 9,
+        "language_quality": 9,
+        "efficiency": 8
+      }
+    },
+    {
+      "id": "CONV-008",
+      "category": "produktanfrage",
+      "expected_score_range": [4.0, 5.5],
+      "messages": [
+        {
+          "role": "customer",
+          "content": "Ist dieser Laptop mit Windows 11 kompatibel?"
+        },
+        {
+          "role": "chatbot",
+          "content": "Ja."
+        },
+        {
+          "role": "customer",
+          "content": "Wie viel Arbeitsspeicher hat er?"
+        },
+        {
+          "role": "chatbot",
+          "content": "8GB."
+        },
+        {
+          "role": "customer",
+          "content": "Kann man den erweitern?"
+        },
+        {
+          "role": "chatbot",
+          "content": "Ich bin mir nicht sicher. Schauen Sie am besten in die Produktbeschreibung."
+        }
+      ],
+      "expected_dimensions": {
+        "accuracy": 6,
+        "tone": 4,
+        "compliance": 7,
+        "completeness": 3,
+        "language_quality": 7,
+        "efficiency": 3
+      }
+    }
+  ],
+  "human_annotations": {
+    "description": "Gold standard human annotations for meta-evaluation",
+    "annotators": ["expert_1", "expert_2"],
+    "inter_annotator_agreement": 0.89,
+    "annotations": {
+      "CONV-001": {
+        "expert_1": { "overall": 9.5, "accuracy": 10, "tone": 9, "compliance": 10, "completeness": 10, "language_quality": 10, "efficiency": 9 },
+        "expert_2": { "overall": 9.3, "accuracy": 10, "tone": 9, "compliance": 10, "completeness": 9, "language_quality": 10, "efficiency": 9 }
+      },
+      "CONV-002": {
+        "expert_1": { "overall": 3.8, "accuracy": 5, "tone": 2, "compliance": 5, "completeness": 3, "language_quality": 7, "efficiency": 4 },
+        "expert_2": { "overall": 4.0, "accuracy": 5, "tone": 3, "compliance": 6, "completeness": 3, "language_quality": 7, "efficiency": 4 }
+      },
+      "CONV-003": {
+        "expert_1": { "overall": 8.2, "accuracy": 8, "tone": 8, "compliance": 9, "completeness": 8, "language_quality": 9, "efficiency": 8 },
+        "expert_2": { "overall": 8.0, "accuracy": 8, "tone": 8, "compliance": 9, "completeness": 8, "language_quality": 9, "efficiency": 7 }
+      },
+      "CONV-005": {
+        "expert_1": { "overall": 2.1, "accuracy": 3, "tone": 1, "compliance": 2, "completeness": 2, "language_quality": 6, "efficiency": 4 },
+        "expert_2": { "overall": 2.3, "accuracy": 3, "tone": 1, "compliance": 2, "completeness": 2, "language_quality": 6, "efficiency": 5 }
+      }
+    }
+  }
+}
